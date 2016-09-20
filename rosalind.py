@@ -4,14 +4,16 @@ from sys import argv
 
 
 def find_overlap(left, right): # (String, String) => Option[Int]
-    half_shorter = min(len(left), len(right)) // 2
-    right_prefixes = (right[:i] for i in range(len(right), half_shorter, -1))
-    return next(filter(left.endswith, right_prefixes), None)
+    min_overlap = min(len(left), len(right)) // 2 + 1
+    overlap_start = left.find(right[:min_overlap])
+    overlap = left[overlap_start:]
+    if overlap_start != -1 and right.startswith(overlap):
+        return len(overlap)
 
 
 def adjacency_list(strands): # Seq[String] => Map[String, (String, Int)]
     pairs = list(permutations(strands, 2))
-    return {left: (right, len(overlap))
+    return {left: (right, overlap)
             for (left, right), overlap
             in zip(pairs, starmap(find_overlap, pairs))
             if overlap is not None}
