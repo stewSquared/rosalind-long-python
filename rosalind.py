@@ -11,22 +11,20 @@ def find_overlap(left, right): # (String, String) => Option[Int]
         return len(overlap)
 
 
-def adjacency_list(strands): # Seq[String] => Map[String, (String, Int)]
-    pairs = list(permutations(strands, 2))
-    return {left: (right, overlap)
-            for (left, right), overlap
-            in zip(pairs, starmap(find_overlap, pairs))
-            if overlap is not None}
+def adjacency_list(strands): # Seq[String] => Map[String, String]
+    return {left: right
+            for (left, right) in permutations(strands, 2)
+            if find_overlap(left, right) is not None}
     
 
 def assemble(strands): # Seq[String] => String
     adj = adjacency_list(strands)
-    start_nodes = adj.keys() - map(lambda tup: tup[0], adj.values())
+    start_nodes = adj.keys() - adj.values()
     assert(len(start_nodes) == 1)
-    node = super_strand = start_nodes.pop()
+    right = super_strand = start_nodes.pop()
     while adj:
-        node, overlap = adj.pop(node)
-        super_strand += node[overlap:]
+        left, right = right, adj.pop(right)
+        super_strand += right[find_overlap(left, right):]
     return super_strand
 
 
