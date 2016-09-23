@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from itertools import permutations, groupby, starmap
+from itertools import permutations, groupby
 from sys import argv
 
 
