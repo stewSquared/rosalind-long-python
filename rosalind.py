@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-from itertools import permutations, groupby, starmap
 from sys import argv
+from itertools import permutations, groupby
 
 
-def find_overlap(left, right): # (String, String) => Option[Int]
+def find_overlap(left, right):  # (String, String) => Option[Int]
     min_overlap = min(len(left), len(right)) // 2 + 1
     overlap_start = left.find(right[:min_overlap])
     overlap = left[overlap_start:]
@@ -11,13 +11,13 @@ def find_overlap(left, right): # (String, String) => Option[Int]
         return len(overlap)
 
 
-def adjacency_list(strands): # Seq[String] => Map[String, String]
+def adjacency_list(strands):  # Seq[String] => Map[String, String]
     return {left: right
             for (left, right) in permutations(strands, 2)
             if find_overlap(left, right) is not None}
-    
 
-def assemble(strands): # Seq[String] => String
+
+def assemble(strands):  # Seq[String] => String
     adj = adjacency_list(strands)
     start_nodes = adj.keys() - adj.values()
     assert(len(start_nodes) == 1)
@@ -28,7 +28,7 @@ def assemble(strands): # Seq[String] => String
     return super_strand
 
 
-def fasta_strands(filename): # String => Seq[String]
+def fasta_strands(filename):  # String => Seq[String]
     with open(filename) as f:
         stripped_lines = map(lambda l: l.strip(), f.readlines())
         dna_groups = (lines for is_label, lines
@@ -37,6 +37,6 @@ def fasta_strands(filename): # String => Seq[String]
         return map("".join, dna_groups)
 
 
-if __name__ == "__main__": # Option[String] => String
+if __name__ == "__main__":  # Option[String] => String
     filename = argv[1] if len(argv) > 1 else "rosalind_long.txt"
     print(assemble(fasta_strands(filename)))
