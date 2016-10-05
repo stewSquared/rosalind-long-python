@@ -2,7 +2,7 @@
 
 Takes one filename argument (defaults to "rosalind_long.txt") and
 prints assembled superstring to stdout. Mark executable or run with
-`python3 rosalind.py`.
+`python2 rosalind.py`.
 
 
 ## Caveats
@@ -12,13 +12,6 @@ right are roughly the same length, but if the left string is
 significantly longer, complexity is linear in len(left) but remains
 O(min_overlap) if right is significantly longer. Superstring
 relationships are not detected.
-
-A possible optimization is ignored in adjecency_list: After a match is
-found for a left or right is found, we could stop checking those and
-reduce the number of calls to find_overlap (the most expensive method)
-by at least 50% (~75% on average). I tried this and didn't like the
-code or see significance performance increase compared to the overhead
-of running the entire program.
 
 `adjacency_list` is not technically an adjacency list, whose type
 would be `String -> List[String]` rather than `String -> String`. This
@@ -38,3 +31,9 @@ have to recompute overlap during assembly. I don't for two reasons:
 I call `find_overlap` in `assemble` without first performing a None
 check. This is safe, because of the pre-computed `adj`, but the compiler
 doesn't know that. Living on the edge! ;)
+
+There are no tests. I tested in the REPL as I went. That said, the
+code is pretty modular and easily testable, since I pretty much used
+TDD then threw the tests away.
+
+Documentation is just comments with Scala type signatures. Sorry.

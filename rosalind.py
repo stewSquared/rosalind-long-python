@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 from sys import argv
 from itertools import permutations, groupby
 
@@ -12,14 +12,18 @@ def find_overlap(left, right):  # (String, String) => Option[Int]
 
 
 def adjacency_list(strands):  # Seq[String] => Map[String, String]
-    return {left: right
-            for (left, right) in permutations(strands, 2)
-            if find_overlap(left, right) is not None}
+    adj = dict()
+    for left, right in permutations(strands, 2):
+        if left in adj or right in adj.values():
+            continue  # This line is purely a performance optimization.
+        if find_overlap(left, right):
+            adj[left] = right
+    return adj
 
 
 def assemble(strands):  # Seq[String] => String
     adj = adjacency_list(strands)
-    start_nodes = adj.keys() - adj.values()
+    start_nodes = set(adj.keys()).difference(adj.values())
     assert(len(start_nodes) == 1)
     right = super_strand = start_nodes.pop()
     while adj:
@@ -39,4 +43,4 @@ def fasta_strands(filename):  # String => Seq[String]
 
 if __name__ == "__main__":  # Option[String] => String
     filename = argv[1] if len(argv) > 1 else "rosalind_long.txt"
-    print(assemble(fasta_strands(filename)))
+    print assemble(fasta_strands(filename))
