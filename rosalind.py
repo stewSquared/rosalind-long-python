@@ -15,7 +15,7 @@ def adjacency_list(strands):  # Seq[String] => Map[String, String]
     adj = dict()
     for left, right in permutations(strands, 2):
         if left in adj or right in adj.values():
-            continue  # This line is purely a performance optimization.
+            continue  # Short-circuit ~75% of iterations. Non-essential.
         if find_overlap(left, right):
             adj[left] = right
     return adj
@@ -34,7 +34,7 @@ def assemble(strands):  # Seq[String] => String
 
 def fasta_strands(filename):  # String => Seq[String]
     with open(filename) as f:
-        stripped_lines = map(lambda l: l.strip(), f.readlines())
+        stripped_lines = (l.strip() for l in f.readlines())
         dna_groups = (lines for is_label, lines
                       in groupby(stripped_lines, lambda l: l.startswith('>'))
                       if not is_label)
