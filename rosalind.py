@@ -37,10 +37,9 @@ def assemble(strands):  # Seq[String] => String
 def fasta_strands(filename):  # String => Seq[String]
     with open(filename) as f:
         stripped_lines = (l.strip() for l in f.readlines())
-        dna_groups = (lines for is_label, lines
-                      in groupby(stripped_lines, lambda l: l.startswith('>'))
-                      if not is_label)
-        return map("".join, dna_groups)
+        return ("".join(lines) for is_label, lines
+                in groupby(stripped_lines, lambda l: l.startswith('>'))
+                if not is_label)
 
 
 if __name__ == "__main__":  # Option[String] => String
