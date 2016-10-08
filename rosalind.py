@@ -13,11 +13,13 @@ def find_overlap(left, right):  # (String, String) => Option[Int]
 
 def adjacency_list(strands):  # Seq[String] => Map[String, String]
     adj = dict()
+    rights_matched = set()  # For optimization. Don't use `adj.vaues()`
     for left, right in permutations(strands, 2):
-        if left in adj or right in adj.values():
+        if left in adj or right in rights_matched:
             continue  # Short-circuit ~75% of iterations. Non-essential.
         if find_overlap(left, right):
             adj[left] = right
+            rights_matched.add(right)
     return adj
 
 
