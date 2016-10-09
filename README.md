@@ -14,19 +14,14 @@ than O(min_overlap). Superstring relationships are not detected.
 would map `String -> List[String]` rather than `String -> String`.
 This is fine for our case, where the path is linear and unique.
 
-I could return some sort of overlap object/tuple/datastructure that
-stores the length of overlap, rather than just a string, so I don't
-have to recompute overlap during assembly. I don't for two reasons:
-
- - find_overlap is only called O(N) times during assembly vs O(N^2)
-   times during adjacency. Not likely to make 1% difference.
-
- - By not overdesigning for this special-case optimization, code is
-   cleaner, more intuitive, and more re-useable.
+Computation of the adjacency_list is not guaranteed to find all
+overlaps. It optimizes (read: uses magic numbers) for our case where
+strands are roughly the same length and overlap by at least half.
+Even so, computation of `match_sites` is still the bottleneck of the
+algorithm by a long shot.
 
 I call `find_overlap` in `assemble` without first performing a None
-check. This is safe, because of the pre-computed `adj`. But the
-compiler doesn't know that. Renegade for life ;)
+check. This is safe iff `adj` has no false positives.
 
 There are no tests; I used the REPL to develop. That said, code is
 modular and testable, since this is TDD with tests thrown out.
@@ -34,8 +29,8 @@ modular and testable, since this is TDD with tests thrown out.
 Documentation is just comments with Scala type signatures. Sorry.
 
 
-## Performance (Xeon processor)
+## Performance (Xeon processor, 5000 reads)
 
-real    0m0.016s
-user    0m0.010s
-sys     0m0.003s
+real    0m0.796s
+user    0m0.730s
+sys     0m0.063s

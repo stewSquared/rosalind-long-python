@@ -12,15 +12,14 @@ def find_overlap(left, right):  # (String, String) => Option[Int]
 
 
 def adjacency_list(strands):  # Seq[String] => Map[String, String]
-    adj = dict()
-    rights_matched = set()  # For optimization. Don't use `adj.vaues()`
-    for left, right in permutations(strands, 2):
-        if left in adj or right in rights_matched:
-            continue  # Short-circuit ~75% of iterations. Non-essential.
-        if find_overlap(left, right):
-            adj[left] = right
-            rights_matched.add(right)
-    return adj
+    probe_length = len(strands[0]) // 8
+    match_sites = {strand[i:i+probe_length]: strand
+                   for i in range(probe_length*3, probe_length*5)
+                   for strand in strands}
+    return {left: right
+            for left in strands
+            for right in [match_sites.get(left[-probe_length:])]
+            if right is not None}
 
 
 def assemble(strands):  # Seq[String] => String
@@ -37,9 +36,9 @@ def assemble(strands):  # Seq[String] => String
 def fasta_strands(filename):  # String => Seq[String]
     with open(filename) as f:
         stripped_lines = (l.strip() for l in f.readlines())
-        return ("".join(lines) for is_label, lines
+        return ["".join(lines) for is_label, lines
                 in groupby(stripped_lines, lambda l: l.startswith('>'))
-                if not is_label)
+                if not is_label]
 
 
 if __name__ == "__main__":  # Option[String] => String
