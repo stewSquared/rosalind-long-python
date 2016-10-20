@@ -29,8 +29,10 @@ modular and testable, since this is TDD with tests thrown out.
 Documentation is just comments with Scala type signatures. Sorry.
 
 
-## Performance (Xeon processor, 5000 reads)
-
-real    0m0.796s
-user    0m0.730s
-sys     0m0.063s
+### Performance
+(Xeon processor, 50, 500, 5000, and 50000 reads)
+```
+real    0m0.020s    0m0.077s    0m0.796s    0m11.303s
+user    0m0.007s    0m0.060s    0m0.730s    0m10.747s
+sys     0m0.010s    0m0.013s    0m0.063s    0m0.553s
+```
