@@ -20,7 +20,7 @@ def gen_strands(strand_length, overlap=0.67, bases=gen_bases()):
     pass
 
 
-def main(num_strands, strand_length=1000, label="Rosalind"):
+def main(num_strands=50, strand_length=1000, label="Rosalind"):
     strands = list(islice(gen_strands(strand_length), num_strands))
     random.shuffle(strands)
     for i, strand in enumerate(strands):
@@ -30,4 +30,11 @@ def main(num_strands, strand_length=1000, label="Rosalind"):
 
 
 if __name__ == "__main__":
-    main(int(argv[1]) if len(argv) > 1 else 50)
+    if len(argv) == 1:
+        main()
+    elif len(argv) == 2:
+        main(num_strands = int(argv[1]))
+    elif len(argv) == 3:
+        main(num_strands = int(argv[1]), strand_length = int(argv[2]))
+    else:
+        print("Usage: generator.py [num_strands] [strand_length]")
